@@ -12,26 +12,26 @@ export default async function handler(
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method not allowed" });
   }
-
-  const { name, questions } = req.body;
+  const { name, quiz } = req.body;
+  console.log("question in api  ", quiz);
 
   try {
-    const quiz = await prisma.quiz.create({
+    const createQuiz = await prisma.quiz.create({
       data: {
         name,
         questions: {
-          create: questions.map((question: { text: any; answer: any; }) => ({
-            text: question.text,
-            answer: question.answer,
+          create: quiz.map((question: { question: any; answer: any }) => ({
+            text: question.question,
+            answer: question.answer === "true",
           })),
         },
       },
-      include: {
-        questions: true,
-      },
+      // include: {
+      //   questions: true,
+      // },
     });
 
-    res.status(201).json(quiz);
+    res.status(201).json(createQuiz);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });

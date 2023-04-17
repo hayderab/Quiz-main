@@ -18,12 +18,14 @@ export default async function handler(
   try {
     const createQuiz = await prisma.quiz.create({
       data: {
-        name,
+        name: name,
         questions: {
-          create: quiz.map((question: { question: any; answer: any }) => ({
-            text: question.question,
-            answer: question.answer === "true",
-          })),
+          create: quiz.map(
+            (question: { question: string; answer: string }) => ({
+              text: question.question,
+              answer: question.answer === "true",
+            })
+          ),
         },
       },
       // include: {

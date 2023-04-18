@@ -12,17 +12,18 @@ datasource db {
 
 
 model User {
-  id    String @id @default(cuid())
-  name  String @unique
-  // quizzes Quiz[]
+  userId       String   @id @default(cuid())
+  userName     String   @unique
+  quizzes  Quiz[]
 }
 
 model Quiz {
-  id          Int        @id @default(autoincrement())
-  name        String
-  questions   Question[] @relation("QuizToQuestion")
-  // userId      String
-  // user        User       @relation(fields: [userId], references: [id])
+  id         Int        @id @default(autoincrement())
+  name       String
+  questions  Question[]
+  createrId     String
+
+  user       User       @relation(fields: [createrId], references: [userId])
 }
 
 model Question {
@@ -30,22 +31,8 @@ model Question {
   text       String
   answer     Boolean
   quizId     Int
-  quiz       Quiz     @relation("QuizToQuestion", fields: [quizId], references: [id])
+  quiz       Quiz     @relation(fields: [quizId], references: [id])
 }
 
 
 
-
-// model Quiz {
-//   id        Int      @id @default(autoincrement())
-//   name      String
-//   questions Question[]    //instead of storing question, i could store id of each question
-// }
-
-// model Question {
-//   id         Int      @id @default(autoincrement())
-//   text       String
-//   answer     Boolean
-//   quizId     Int
-//   quiz       Quiz     @relation(fields: [quizId], references: [id])
-// }

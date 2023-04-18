@@ -9,9 +9,11 @@ export default function Quiz() {
 
   // store the question and all the answers
   const [data, setData] = useState<{
+    userName: string;
     name: string;
     quiz: { question: string; answer: string }[];
   }>({
+    userName: "",
     name: "",
     quiz: [],
   });
@@ -24,11 +26,15 @@ export default function Quiz() {
     },
   ]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setData((prevData) => ({
-      ...prevData,
-      name: e.target.value,
-    }));
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setData((prevData) => ({
+  //     ...prevData,
+  //     name: e.target.value,
+  //   }));
+  // };
+  const handleChange = (event: { target: { name: any; value: any } }) => {
+    const { name, value } = event.target;
+    setData({ ...data, [name]: value });
   };
 
   // on add  new question empty form data is created
@@ -51,14 +57,13 @@ export default function Quiz() {
     newQuestions.splice(index, 1);
     setQuestions(newQuestions);
   };
-
+  // collect data from all the question and send them to database
   const collectdata = (e: any) => {
     e.preventDefault();
     setLoading(true);
     const newdata = { ...data };
     newdata.quiz = questions;
     console.log("question:", newdata);
-
     fetch("/api/quiz/create", {
       method: "POST",
       headers: {
@@ -87,22 +92,41 @@ export default function Quiz() {
         <div className="relative bg-white px-4 pt-5 mt-5 pb-7 ring-gray-900/5 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10">
           <h1> Create Quiz</h1>
           <form>
-            <div className="mb-4">
-              <label
-                htmlFor="name"
-                className="block mb-2 font-bold text-gray-700 "
-              >
-                Name of quiz
-              </label>
-              <input
-                type="text"
-                id="name"
-                onChange={handleChange}
-                value={data.name}
-                name="name"
-                className="w-full px-3 py-2 border rounded-md"
-                required
-              />
+            <div className="flex justify-between p-2">
+              <div className="mb-4">
+                <label
+                  htmlFor="userName"
+                  className="block mb-2 font-bold text-gray-700 "
+                >
+                  Enter Username
+                </label>
+                <input
+                  type="text"
+                  id="userName"
+                  onChange={handleChange}
+                  value={data.userName}
+                  name="userName"
+                  className="w-full px-3 py-2 border rounded-md"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="name"
+                  className="block mb-2 font-bold text-gray-700 "
+                >
+                  Topic of quiz
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  onChange={handleChange}
+                  value={data.name}
+                  name="name"
+                  className="w-full px-3 py-2 border rounded-md"
+                  required
+                />
+              </div>
             </div>
             <div className="flex justify-center items-center border-b-2">
               <h2 className="mb-2 text-xl font-bold text-gray-800">
@@ -163,11 +187,13 @@ export default function Quiz() {
                     onClick={() => deleteQuestion(index)}
                   >
                     {" "}
-                    Delete question
+                    Delete Question
                   </button>
                 </>
               );
             })}
+            {/** ...... Adding questions for the quiz ................... */}
+
             <button
               onClick={addQuestions}
               type="button"

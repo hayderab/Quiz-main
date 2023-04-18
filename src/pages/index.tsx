@@ -19,15 +19,15 @@ const getQuizData = async () => {
 };
 
 export default function Home() {
-  const { data, isLoading, isFetching } = useQuery({
+  const { data, isLoading, isFetching, error } = useQuery({
     queryKey: ["quiz"],
     queryFn: getQuizData,
   });
 
   // console.log(isLoading);
   // console.log(data);
-  // if (!data) return <div>No Data</div>;
-  // if (error) return 'An error has occurred: ' + error.message
+  if (!data) return <div>No Data</div>;
+  if (error) return <div>Data Error </div>;
 
   return (
     <>
@@ -42,7 +42,7 @@ export default function Home() {
               Test your knowledge on different topics
             </p>
           </div>
-          <Link href={"/createquiz"} >
+          <Link href={"/createquiz"}>
             <div className="relative bg-gray-100 px-4 pt-5 pb-7 hover:cursor-pointer hover:shadow-md border-1 border ring-gray-900/5 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10">
               <div className="flex justify-center mx-auto max-w-md ">
                 {" "}
@@ -65,23 +65,22 @@ export default function Home() {
             </div>
           </Link>
           <br></br>
-          {isLoading && (
-            <>
-              <Loading></Loading>
-            </>
-          )}
+          {isLoading ||
+            (!data && (
+              <>
+                <Loading></Loading>
+              </>
+            ))}
           {data?.map((quiz: any, index: number) => (
-
             <Link href={`/${quiz.id}`} key={index}>
-            <div
-              key={index}
-              className="relative m-2 bg-white px-4 pt-5 pb-7 hover:cursor-pointer shadow-xl ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10"
-            >
-              <h1 className="mx-auto max-w-md font-bold ">{quiz.name}</h1>
-              {/* <div className="mx-auto max-w-md">
-                Number of Question: {quiz.questions.length}
-              </div> */}
-            </div>
+              <div
+                key={index}
+                className="relative m-2 bg-white px-4 pt-5 pb-7 hover:cursor-pointer shadow-xl ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10"
+              >
+                <h1 className="mx-auto max-w-md font-bold ">{quiz.userName}</h1>
+
+                <h1 className="mx-auto max-w-md font-bold ">{quiz.name}</h1>
+              </div>
             </Link>
           ))}
         </div>
@@ -100,6 +99,6 @@ export async function getStaticProps() {
     props: {
       dehydratedState: dehydrate(queryClient),
     },
-    // revalidate: 20, // revalidate every 10 second
+    revalidate: 20, // revalidate every 20 second
   };
 }

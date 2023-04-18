@@ -1,6 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "lib/db/client";
 
+/**
+ *
+ * @param req
+ * @param res return all the quizes from quiz table
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -12,9 +17,6 @@ export default async function handler(
           include: {
             questions: false,
           },
-          //   orderBy: {
-          //     createdAt: "desc",
-          //   }
         });
         res.status(200).json(getQuizzes);
       } catch (error) {

@@ -29,7 +29,7 @@ export default function Home() {
       </Head>
       <main>
         <Layout>
-          <div className="max-w-screen-xl mx-auto px-5 bg-white min-h-sceen overflow-auto">
+          <div className="max-w-screen-xl mx-auto px-5 bg-white h-[90%] overflow-auto">
             <div className="flex flex-col items-center pb-3">
               <h1 className="font-bold text-5xl mt-5 tracking-tight">Quizzes</h1>
               <p className="text-neutral-500 text-xl mt-3">
@@ -95,6 +95,6 @@ export async function getStaticProps() {
     props: {
       dehydratedState: dehydrate(queryClient),
     },
-    revalidate: 5, // revalidate every 20 second
+    revalidate: 5, // revalidate every 5 second
   };
 }

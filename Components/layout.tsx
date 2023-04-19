@@ -6,8 +6,8 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="fixed  items-center justify-center bg-slate-200 min-h-screen max-h-[80%] top-0 left-0 right-0 bottom-0">
-      <div className="flex max-w-8xl h-[90%] flex-1 m-10 flex-col space-y-5 bg-white sm:mx-4 sm:my-2 sm:rounded-2xl sm:p-6 lg:flex-row lg:space-x-10 lg:space-y-0">
+    <div className="fixed  items-center justify-center bg-slate-200 min-h-screen max-h-screen top-0 left-0 right-0 bottom-0">
+      <div className="flex max-w-screen h-screen flex-1 m-10 flex-col space-y-5 bg-white sm:mx-4 sm:my-2 sm:rounded-2xl sm:p-6 lg:flex-row lg:space-x-10 lg:space-y-0">
         <div className="flex justify-between bg-blue-500 px-2 py-2 sm:rounded-xl lg:flex-col lg:px-4 lg:py-10">
           <nav className="flex flex-row items-center space-x-2 lg:flex-col lg:space-x-0 lg:space-y-2">
             <Link

@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { GetStaticProps, GetStaticPaths } from "next";
 import { Question } from "@prisma/client";
-import Loading from "Components/loading";
-import CircularProgressbar from "Components/CircleBar";
-import ProgressBar from "Components/ProgressBar";
+import Loading from "components/loading";
+import CircularProgressbar from "components/CircleBar";
+import ProgressBar from "components/ProgressBar";
 import Link from "next/link";
-
+import Layout from "components/layout";
+import Head from "next/head";
 type QuizPageProps = {
   quiz: Question[];
 };
@@ -46,21 +47,16 @@ export default function View({ quiz }: QuizPageProps) {
   };
 
   const isLastQuestion = currentQuestionIndex === quiz.length;
-  const progressPercentage = (currentQuestionIndex / quiz.length) * 100;
 
   return (
     <>
-      <main className="max-w-screen-xl mx-auto px-5 bg-white min-h-sceen">
+      <Head>
+        <title>View Quiz</title>
+      </Head>
+      <Layout>
         <div className="grid grid-rows-1 mt-20 bg-slate-50 px-4 pt-5  shadow-xl ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10">
           <div>
-            {/**---------Progress bar ---------------- */}
-            <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-              <div
-                className="bg-blue-600 h-2.5 rounded-full"
-                style={{ width: `${progressPercentage}%` }}
-              ></div>
-            </div>
-            {/* <ProgressBar progress={currentQuestionIndex} total={quiz.length} /> */}
+            <ProgressBar progress={currentQuestionIndex} total={quiz.length} />
             {isLastQuestion ? (
               <div>
                 <div className="flex justify-center items-center m-2">
@@ -169,7 +165,7 @@ export default function View({ quiz }: QuizPageProps) {
             )}
           </div>
         </div>
-      </main>
+      </Layout>
     </>
   );
 }
@@ -185,14 +181,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
       params: { quizId: quiz.id.toString() },
     }));
     return {
-      paths: [],
-      fallback: true,
+      paths: paths,
+      fallback: false,
     };
   } catch (error) {
     console.log("localhost not aviliable during build ");
     return {
       paths: [],
-      fallback: true,
+      fallback: "blocking",
     };
   }
 };
@@ -200,17 +196,22 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps<QuizPageProps> = async (
   context
 ) => {
-  const quizId = context.params?.quizId;
-  const quiz = await getQuizById(parseInt(quizId as string)); // convert quizId to a number and fetch data based on quiz id...
-  if (!quiz) {
+  try {
+    const quizId = context.params?.quizId;
+    const quiz = await getQuizById(parseInt(quizId as string));
+    // console.log("inside static props quiz[id]:", quiz);
+    if (!quiz || quiz.length === 0) {
+      return { notFound: true };
+    }
+
+    // console.log("get static props");
+    return {
+      props: {
+        quiz,
+      },
+      revalidate: 5, // revalidate every 5 second
+    };
+  } catch (error) {
     return { notFound: true };
   }
-
-  console.log("get static props");
-  return {
-    props: {
-      quiz,
-    },
-    revalidate: 20, // revalidate every 10 second
-  };
 };

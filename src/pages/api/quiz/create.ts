@@ -32,7 +32,7 @@ export default async function handler(
         questions: {
           create: quiz.map((question: { question: any; answer: any }) => ({
             text: question.question,
-            answer: question.answer === "true",
+            answer: question.answer.toLowerCase() === "true", // saving  boolean
           })),
         },
       },

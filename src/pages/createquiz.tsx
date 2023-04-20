@@ -7,7 +7,7 @@ import Layout from "components/layout";
 
 interface FormData {
   name: string;
-  quiz: any[]; // replace "any[]" with the appropriate type for your quiz data
+  quiz: any[];
 }
 export default function Quiz() {
   const router = useRouter();
@@ -120,7 +120,7 @@ export default function Quiz() {
         setLoading(false);
 
         // Handle error
-        // console.error("Error:", error);
+        console.error("Error:", error);
       });
   }
   return (

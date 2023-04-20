@@ -17,6 +17,9 @@ export default async function handler(
           include: {
             questions: false,
           },
+          orderBy: {
+            createdAt: "asc",
+          },
         });
         res.status(200).json(getQuizzes);
       } catch (error) {

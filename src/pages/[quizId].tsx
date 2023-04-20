@@ -12,13 +12,13 @@ type QuizPageProps = {
   quiz: Question[];
 };
 
-//
-
+//getting data from api and resturn json
 const getQuizById = async (quizId: number) => {
-  const response = await fetch(`http://127.0.0.1:3000/api/quiz/${quizId}`);
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/quiz/${quizId}`
+  );
   const data = await response.json();
 
-  // console.log("data in dynamic page:", data);
   return data;
 };
 
@@ -46,6 +46,7 @@ export default function View({ quiz }: QuizPageProps) {
     setCurrentQuestionIndex(currentQuestionIndex + 1);
   };
 
+  // checking when to show the score
   const isLastQuestion = currentQuestionIndex === quiz.length;
 
   return (
@@ -193,13 +194,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 };
 
+
+
 export const getStaticProps: GetStaticProps<QuizPageProps> = async (
   context
 ) => {
   try {
     const quizId = context.params?.quizId;
     const quiz = await getQuizById(parseInt(quizId as string));
-    // console.log("inside static props quiz[id]:", quiz);
     if (!quiz || quiz.length === 0) {
       return { notFound: true };
     }

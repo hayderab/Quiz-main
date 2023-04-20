@@ -15,7 +15,7 @@ export default async function handler(
   }
 
   const topic = req.body.topic;
-  //   console.log("........", topic);
+  console.log("........", topic);
   // checking for input
   if (topic === undefined || topic === "") {
     console.log("data not recieved");
@@ -55,7 +55,7 @@ export default async function handler(
     const firstResponse = response.data.choices[0].text;
     res.status(200).json({ result: firstResponse });
   } catch (error) {
-    console.log("open api data fetching error: ", error);
+    // console.log("open api data fetching error: ", error);
     throw error;
   }
 }

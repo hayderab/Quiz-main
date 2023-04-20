@@ -12,22 +12,22 @@ type QuizPageProps = {
   quiz: Question[];
 };
 
-//getting data from api and resturn json
+//
+
 const getQuizById = async (quizId: number) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/quiz/${quizId}`
-  );
+  const response = await fetch(`http://127.0.0.1:3000/api/quiz/${quizId}`);
   const data = await response.json();
 
+  // console.log("data in dynamic page:", data);
   return data;
 };
 
 export default function View({ quiz }: QuizPageProps) {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // question incrementation based
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [answer, setAnswer] = useState<boolean | null>(null);
   const router = useRouter();
-
+  // console.log("ddd", quiz.length);
   if (router.isFallback) {
     return (
       <div>
@@ -46,7 +46,6 @@ export default function View({ quiz }: QuizPageProps) {
     setCurrentQuestionIndex(currentQuestionIndex + 1);
   };
 
-  // checking when to show the score
   const isLastQuestion = currentQuestionIndex === quiz.length;
 
   return (
@@ -174,7 +173,8 @@ export default function View({ quiz }: QuizPageProps) {
 export const getStaticPaths: GetStaticPaths = async () => {
   try {
     // generate paths for all quizzes
-    const quizzes = await (
+    const quizzes = await // server address
+    (
       await fetch(`http://127.0.0.1:3000/api/quiz`)
     ).json();
     // slower build, but faster initial page load
@@ -183,7 +183,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     }));
     return {
       paths: paths,
-      fallback: false, // if page does not exist show 404
+      fallback: false,
     };
   } catch (error) {
     console.log("localhost not aviliable during build ");
@@ -200,6 +200,7 @@ export const getStaticProps: GetStaticProps<QuizPageProps> = async (
   try {
     const quizId = context.params?.quizId;
     const quiz = await getQuizById(parseInt(quizId as string));
+    // console.log("inside static props quiz[id]:", quiz);
     if (!quiz || quiz.length === 0) {
       return { notFound: true };
     }

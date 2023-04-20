@@ -1,6 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "lib/db/client";
 
+/**
+ *
+ * @param req quiz id
+ * @param res all the questions and answers based on quiz id
+ * @returns question of quiz based on id
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -10,8 +16,6 @@ export default async function handler(
   }
 
   const quizId = req.query.id;
-
-  // console.log("quizId in api call", quizId);
 
   try {
     const getQuesByQuizId = await prisma.question.findMany({

@@ -23,11 +23,11 @@ const getQuizById = async (quizId: number) => {
 };
 
 export default function View({ quiz }: QuizPageProps) {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // question incrementation based
   const [score, setScore] = useState(0);
   const [answer, setAnswer] = useState<boolean | null>(null);
   const router = useRouter();
-  // console.log("ddd", quiz.length);
+
   if (router.isFallback) {
     return (
       <div>
@@ -183,7 +183,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     }));
     return {
       paths: paths,
-      fallback: false,
+      fallback: false, // if page does not exist show 404
     };
   } catch (error) {
     console.log("localhost not aviliable during build ");
@@ -193,8 +193,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
     };
   }
 };
-
-
 
 export const getStaticProps: GetStaticProps<QuizPageProps> = async (
   context

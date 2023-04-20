@@ -6,6 +6,12 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
+/**
+ *
+ * @param req topic of question from body
+ * @param res
+ * @returns 5 questions and answers
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -36,7 +42,7 @@ export default async function handler(
     return;
   }
   try {
-    // could be furhter improved
+    // could be  improved further to save token usage
     const prompt = `please generate 5 true or false question and answer based on this topic ${topic}  no description Exactly like the following format: [ {question: "",  answer:" true or false"}]`;
 
     const payload = {
@@ -55,7 +61,7 @@ export default async function handler(
     const firstResponse = response.data.choices[0].text;
     res.status(200).json({ result: firstResponse });
   } catch (error) {
-    // console.log("open api data fetching error: ", error);
+    console.log("open api data fetching error or key expired/invalid: ", error);
     throw error;
   }
 }

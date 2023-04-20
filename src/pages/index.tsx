@@ -4,22 +4,20 @@ import { QueryClient, dehydrate, useQuery } from "@tanstack/react-query";
 import Loading from "components/loading";
 import Layout from "components/layout";
 
-
 //fetching questions ,base url is used so fetch can be done in staticprops as well
 const getQuizData = async () => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/quiz`);
+  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/quiz`); //
   const data = await response.json();
   return data;
 };
 
 export default function Home() {
-  const { data, isLoading, isFetching, error } = useQuery({
+  //get prefetch data
+  const { data, isFetching, error } = useQuery({
     queryKey: ["quiz"],
     queryFn: getQuizData,
   });
 
-  // console.log(isLoading);
-  // console.log(data);
   if (error) return <div>Data Error </div>;
 
   return (
@@ -31,7 +29,9 @@ export default function Home() {
         <Layout>
           <div className="max-w-screen-xl mx-auto px-5 bg-white h-[90%] overflow-auto">
             <div className="flex flex-col items-center pb-3">
-              <h1 className="font-bold text-5xl mt-5 tracking-tight">Quizzes</h1>
+              <h1 className="font-bold text-5xl mt-5 tracking-tight">
+                Quizzes
+              </h1>
               <p className="text-neutral-500 text-xl mt-3">
                 Test your knowledge on different topics
               </p>
@@ -59,7 +59,7 @@ export default function Home() {
               </div>
             </Link>
             <br></br>
-            {isLoading ||
+            {isFetching ||
               (!data && (
                 <>
                   <Loading></Loading>
@@ -85,13 +85,13 @@ export default function Home() {
   );
 }
 
-//dehydration for caching
 export async function getStaticProps() {
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery(["quiz"], getQuizData); // get quiz data fetched from  api
+  await queryClient.prefetchQuery(["quiz"], getQuizData); // prefetch  quiz data fetched from  api
 
   return {
+    //dehydration for caching
     props: {
       dehydratedState: dehydrate(queryClient),
     },

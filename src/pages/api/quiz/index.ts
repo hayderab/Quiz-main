@@ -14,11 +14,11 @@ export default async function handler(
     case "GET":
       try {
         const getQuizzes = await prisma.quiz.findMany({
-          include: {
-            questions: false,
-          },
           orderBy: {
             createdAt: "asc",
+          },
+          include: {
+            questions: false,
           },
         });
         res.status(200).json(getQuizzes);

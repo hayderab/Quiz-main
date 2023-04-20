@@ -15,6 +15,7 @@ type QuizPageProps = {
 //
 
 const getQuizById = async (quizId: number) => {
+  // used in getstatic props  server address
   const response = await fetch(`http://127.0.0.1:3000/api/quiz/${quizId}`);
   const data = await response.json();
 
@@ -174,9 +175,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   try {
     // generate paths for all quizzes
     const quizzes = await // server address
-    (
-      await fetch(`http://127.0.0.1:3000/api/quiz`)
-    ).json();
+    (await fetch(`http://127.0.0.1:3000/api/quiz`)).json();
     // slower build, but faster initial page load
     const paths = quizzes.map((quiz: any) => ({
       params: { quizId: quiz.id.toString() },
